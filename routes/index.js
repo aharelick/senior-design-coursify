@@ -10,17 +10,17 @@ router.get('/', function(req, res, next) {
 
 /* GET signup page. */
 router.get('/signup', function(req, res, next) {
-  res.render('signup', { title: 'RaaS' });
+  res.render('signup', { title: 'Coursify' });
 });
 
 /* GET login page. */
 router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'RaaS'});
+  res.render('login', { title: 'Coursify'});
 });
 
 /* GET dashboard. */
 router.get('/dashboard', function(req, res, next) {
-  res.render('dashboard', { title: 'RaaS'});
+  res.render('dashboard', { title: 'Coursify'});
 });
 
 /* POST signup. */
