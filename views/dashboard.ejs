@@ -11,10 +11,54 @@
 
     <main>
       <div class="ui main text container">
-        <h1 class="ui header">Upload Your Data</h1>
+        <h1 class="ui header">Rate Your Courses!</h1>
         <form>
-          <input class="ui input" type="file" name="dataFile"></input><br><br>
-          <button class="ui button" action="submit">Submit Data File</input>
+          <select class="ui dropdown">
+            <option value="">Department</option>
+            <option value="CIS">CIS</option>
+            <option value="ESE">ESE</option>
+          </select>
+          <select class="ui dropdown">
+            <option value="">Course Number</option>
+            <option value="331">331</option>
+            <option value="455">455</option>
+          </select>
+
+          <div class="ui form">
+            <div class="inline fields">
+              <div class="field">
+                <div class="ui radio checkbox">
+                  <input type="radio" name="rating" checked="checked">
+                  <label>1</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui radio checkbox">
+                  <input type="radio" name="rating">
+                  <label>2</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui radio checkbox">
+                  <input type="radio" name="rating">
+                  <label>3</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui radio checkbox">
+                  <input type="radio" name="rating">
+                  <label>4</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui radio checkbox">
+                  <input type="radio" name="rating">
+                  <label>5</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </form>
       </div>
     </main>
