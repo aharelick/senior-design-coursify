@@ -21,7 +21,7 @@
             '<option value="CIS">CIS</option><option value="ESE">ESE</option></select><select class="ui dropdown">' + 
             '<option value="">Course Number</option><option value="331">331</option><option value="455">455</option>' + 
             '</select><div class="ui form"><div class="inline fields"><div class="field"><div class="ui radio checkbox">' + 
-            '<input type="radio" name="rating" checked="checked"><label>1</label></div></div><div class="field">' + 
+            '<input type="radio" name="rating"><label>1</label></div></div><div class="field">' + 
             '<div class="ui radio checkbox"><input type="radio" name="rating"><label>2</label></div></div>' + 
             '<div class="field"><div class="ui radio checkbox"><input type="radio" name="rating"><label>3</label></div>' + 
             '</div><div class="field"><div class="ui radio checkbox"><input type="radio" name="rating"><label>4</label>' + 
@@ -32,61 +32,20 @@
           counter++;
         }
       }
+
+      window.onload = addInput('readroot');
     </script>
 
     <main>
       <div class="ui main text container">
         <h1 class="ui header">Rate Your Courses!</h1>
-        <form method="POST">
+        <form method="POST" action="submitratings">
           <div id="readroot">
-            <select class="ui dropdown">
-              <option value="">Department</option>
-              <option value="CIS">CIS</option>
-              <option value="ESE">ESE</option>
-            </select>
-            <select class="ui dropdown">
-              <option value="">Course Number</option>
-              <option value="331">331</option>
-              <option value="455">455</option>
-            </select>
-
-            <div class="ui form">
-              <div class="inline fields">
-                <div class="field">
-                  <div class="ui radio checkbox">
-                    <input type="radio" name="rating" checked="checked">
-                    <label>1</label>
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="ui radio checkbox">
-                    <input type="radio" name="rating">
-                    <label>2</label>
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="ui radio checkbox">
-                    <input type="radio" name="rating">
-                    <label>3</label>
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="ui radio checkbox">
-                    <input type="radio" name="rating">
-                    <label>4</label>
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="ui radio checkbox">
-                    <input type="radio" name="rating">
-                    <label>5</label>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
 
           <input class="ui button" type="button" value="Rate more courses" onClick="addInput('readroot');">
+          <input class="ui button" type="submit" value="Submit ratings">
 
         </form>
       </div>
