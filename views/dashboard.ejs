@@ -10,15 +10,16 @@
     </header>
 
     <script>
+      window.onload = addInput('root');
       var counter = 1;
       var limit = 10;
       function addInput(divName){
         if (counter == limit)  {
           alert("You have reached the limit of adding " + counter + " inputs");
         } else {
-          var newdiv = document.createElement('div');
-          var semester = '<select class="ui dropdown"><option value="">Department</option>' + 
-            '<option value="CIS">CIS</option><option value="ESE">ESE</option></select><select class="ui dropdown">' + 
+          var newdiv = document.createElement('semester');
+          var semester = '<div id="course"><select class="ui dropdown" id="dept"><option value="">Department</option>' + 
+            '<option value="CIS">CIS</option><option value="ESE">ESE</option></select><select class="ui dropdown" id="num">' + 
             '<option value="">Course Number</option><option value="331">331</option><option value="455">455</option>' + 
             '</select><div class="ui form"><div class="inline fields"><div class="field"><div class="ui radio checkbox">' + 
             '<input type="radio" name="rating"><label>1</label></div></div><div class="field">' + 
@@ -26,25 +27,21 @@
             '<div class="field"><div class="ui radio checkbox"><input type="radio" name="rating"><label>3</label></div>' + 
             '</div><div class="field"><div class="ui radio checkbox"><input type="radio" name="rating"><label>4</label>' + 
             '</div></div><div class="field"><div class="ui radio checkbox"><input type="radio" name="rating">' + 
-            '<label>5</label></div></div></div></div>';
+            '<label>5</label></div></div></div></div></div>';
           newdiv.innerHTML = semester + semester + semester + semester + semester;
           document.getElementById(divName).appendChild(newdiv);
           counter++;
         }
       }
-
-      window.onload = addInput('readroot');
     </script>
 
     <main>
       <div class="ui main text container">
         <h1 class="ui header">Rate Your Courses!</h1>
-        <form method="POST" action="submitratings">
-          <div id="readroot">
-            
-          </div>
+        <form method="POST" action="submitRatings">
+          <div id="root"></div>
 
-          <input class="ui button" type="button" value="Rate more courses" onClick="addInput('readroot');">
+          <input class="ui button" type="button" value="Rate more courses" onClick="addInput('root');">
           <input class="ui button" type="submit" value="Submit ratings">
 
         </form>
