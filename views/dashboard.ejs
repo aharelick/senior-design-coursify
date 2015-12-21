@@ -37,14 +37,46 @@
 
     <main>
       <div class="ui main text container">
-        <h1 class="ui header">Rate Your Courses!</h1>
-        <form method="POST" action="submitRatings">
-          <div id="root"></div>
+        <div class="ui grid">
+          <div class="eight wide column">
+            <h2 class="ui header">Rate Your Courses</h2>
+            <form method="POST" action="submitRatings">
+              <div id="root"></div>
 
-          <input class="ui button" type="button" value="Rate more courses" onClick="addInput('root');">
-          <input class="ui button" type="submit" value="Submit ratings">
+              <input class="ui button" type="button" value="Rate more courses" onClick="addInput('root');">
+              <input class="ui button" type="submit" value="Submit ratings">
 
-        </form>
+            </form>
+          </div>
+          <div class="eight wide column">
+            <h2 class="ui header">What You've Already Rated</h2>
+            This is dummy data.
+              <table class="ui celled table">
+                <thead>
+                  <tr><th>Department</th>
+                  <th>Course Number</th>
+                  <th>Rating</th>
+                </tr></thead>
+                <tbody>
+                  <tr>
+                    <td>CIS</td>
+                    <td>455</td>
+                    <td>4</td>
+                  </tr>
+                  <tr>
+                    <td>CIS</td>
+                    <td>331</td>
+                    <td>5</td>
+                  </tr>
+                  <tr>
+                    <td>ESE</td>
+                    <td>303</td>
+                    <td>2</td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+        </div>
       </div>
     </main>
 
