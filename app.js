@@ -6,14 +6,15 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var mongoose = require('mongoose');
-var passport = require('passport');
-var MongoStore = require('connect-mongo')(session);
+var MongoStoreSession = require('connect-mongo')(session);
+var MongoStoreToken = require('passwordless-mongostore');
 var flash = require('connect-flash');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var expressValidator = require('express-validator');
+var passwordless = require('passwordless');
+var email = require('emailjs');
 
-require('./config/pass')(passport);
 
 var app = express();
 
@@ -25,9 +26,15 @@ var app = express();
 var config;
 if (app.get('env') === 'development') {
   config = require('./config/config');
+  app.use(logger('dev'));
+} else {
+  app.use(logger('combined'));
 }
 
 var dbURI = process.env.MONGOLAB_URI || config.db;
+var emailUsername = process.env.EMAIL_USERNAME || config.emailUsername;
+var emailPassword = process.env.EMAIL_PASSWORD || config.emailPassword;
+var emailHost = process.env.EMAIL_HOST || config.emailHost;
 
 mongoose.connect(dbURI);
 mongoose.connection.on('error', function() {
@@ -40,7 +47,6 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
@@ -48,20 +54,29 @@ app.use(cookieParser());
 app.use(session({
   resave: false,
   saveUninitialized: false,
-  store: new MongoStore({
+  store: new MongoStoreSession({
     url: dbURI,
     autoReconnect: true
   }),
-  secret: process.env.SESSION_SECRET || config.sessionSecret,
+  secret: process.env.SESSION_SECRET || config.sessionSecret
 }));
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(flash());
+passwordless.init(new MongoStoreToken(dbURI));
+var smtpServer  = email.server.connect({
+  user: emailUsername,
+  password: emailPassword,
+  host: emailHost,
+  ssl: true
+});
+require('./config/passwordless')(passwordless, smtpServer, emailUsername);
+app.use(passwordless.sessionSupport());
+app.use(passwordless.acceptToken({ successRedirect: '/dashboard' }));
 
 app.use(function(req, res, next) {
   res.locals.messages = {
-    success: req.flash('success'),
-    errors: req.flash('errors')
+    success: req.flash('success').concat(req.flash('passwordless-success')),
+    errors:  req.flash('errors').concat(req.flash('passwordless')),
+    form_errors: req.flash('form-errors')
   };
   next();
 });
