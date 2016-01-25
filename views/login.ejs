@@ -22,24 +22,10 @@
         fields: {
           email: {
             identifier: 'email',
-            rules: [{
-              type: 'empty',
-              prompt: 'Please enter your e-mail'
-            },
+            rules: [
             {
               type: 'email',
-              prompt: 'Please enter a valid e-mail'
-            }]
-          },
-          password: {
-            identifier: 'password',
-            rules: [{
-              type: 'empty',
-              prompt: 'Please enter your password'
-            },
-            {
-              type: 'length[8]',
-              prompt: 'Your password must be at least 8 characters'
+              prompt: 'Please enter a valid UPenn email address'
             }]
           }
         }
@@ -55,31 +41,24 @@
           Penn Coursify
         </div>
       </h2>
-        <% if (messages.errors.length !== 0) { %>
-          <form class="ui large form error" action="/login" method="POST">
-        <% } else { %>
-          <form class="ui large form" action="/login" method="POST">
-        <% } %>
-            <div class = "ui stacked segment">
-              <div class="field">
-                <div class="ui input">
-                  <input type="text" name="email" placeholder="E-mail address">
-                </div>
+      <% include ./partials/flash %>
+      <% if (messages.form_errors.length !== 0) { %>
+        <form class="ui large form error" action="/send-token" method="POST">
+      <% } else { %>
+        <form class="ui large form" action="/send-token" method="POST">
+      <% } %>
+          <div class="ui error message">
+            <% include ./partials/form_err %>
+          </div>
+          <div class = "ui stacked segment">
+            <div class="field">
+              <div class="ui input">
+                <input type="text" name="email" placeholder="UPenn E-mail address">
               </div>
-              <div class="field">
-                <div class="ui input">
-                  <input type="password" name="password" placeholder="Password">
-                </div>
-              </div>
-              <button class="ui fluid red submit button">Log In</button>
             </div>
-            <div class="ui error message">
-                <% include ./partials/error_disp %>
-            </div>
-            <div class="ui message">New to us? <a href="/">Sign Up</a></div>
-          </form>
-        </div>
-      </div>
+            <button class="ui fluid red submit button">Log In</button>
+          </div>
+        </form>
     </div>
   </div>
 </body>
