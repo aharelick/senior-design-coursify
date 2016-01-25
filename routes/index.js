@@ -3,6 +3,7 @@ var router = express.Router();
 var validator = require('validator');
 var passwordless = require('passwordless');
 var User = require('../models/User');
+var Review = require('../models/Review');
 
 
 /* GET index page. */
@@ -72,6 +73,43 @@ router.get('/dashboard', passwordless.restricted({ failureRedirect: '/login'}), 
 
 router.get('/logout', passwordless.logout(), function(req, res) {
   res.redirect('/login');
+});
+
+router.get('/my-reviews', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
+  Review.find({ user: req.user }, function(err, reviews) {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    res.json(reviews);
+  });
+});
+
+router.post('/submit-review', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
+  // TODO validate course name
+  // TODO validate rating
+
+  var courseName = req.body['course-name'];
+  var rating = req.body.rating;
+
+  Review.findOne({ user: req.user, courseName: courseName }, function(err, review) {
+    if (err) return res.sendStatus(500);
+    if (review) {
+      review.rating = rating;
+      review.save(function (err) {
+        if (err) return res.sendStatus(500);
+      });
+    } else {
+      var newReview = Review({
+        user: req.user,
+        courseName: courseName,
+        rating: rating
+      });
+      newReview.save(function (err) {
+        if (err) return res.sendStatus(500);
+      });
+    }
+    return res.sendStatus(200);
+  });
 });
 
 module.exports = router;

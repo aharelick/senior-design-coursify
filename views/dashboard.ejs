@@ -2,26 +2,118 @@
 <html lang="en">
 <head>
   <% include ./partials/head %>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+  <style>
+      main > .ui.container {
+          margin-top: 3em;
+      }
+  </style>
 </head>
-<body class="container">
+<body>
 
     <header>
       <% include ./partials/header %>
     </header>
 
     <main>
-      <div class="ui main text container">
-        <h1 class="ui header">Upload Your Data</h1>
-        <form>
-          <input class="ui input" type="file" name="dataFile"></input><br><br>
-          <button class="ui button" action="submit">Submit Data File</input>
-        </form>
+      <div class="ui two column stackable grid container">
+        <div class="column">
+          <h2>Submit A Class Rating</h2>
+          <form class="ui form">
+              <div class="fields">
+                <div class="ui six wide search field">
+                  <input class="prompt" type="text" name="course-name" placeholder="Courses...">
+                  <div class="results"></div>
+                </div>
+                <div class="six wide field">
+                  <div class="ui selection dropdown">
+                    <input type="hidden" name="rating">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Rating</div>
+                    <div class="menu">
+                      <div class="item" data-value="1">1</div>
+                      <div class="item" data-value="2">2</div>
+                      <div class="item" data-value="3">3</div>
+                      <div class="item" data-value="4">4</div>
+                      <div class="item" data-value="5">5</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <button class="ui submit button">Submit</button>
+          </form>
+        </div>
+        <div class="column">
+          <h2>Submitted Rankings</h2>
+          <table class="ui red table">
+            <tbody></tbody>
+            </table>
+        </div>
       </div>
     </main>
 
     <footer>
       <% include ./partials/footer %>
     </footer>
+
+    <script>
+      var buildReview = function(review) {
+        var html = '<tr class="review" data-id="' + review._id + '">' +
+                     '<td>' + review.courseName + '</td><td>' + review.rating + '</td>' +
+                     '</tr>';
+        return html;
+      }
+
+      var loadReviews = function() {
+        $.getJSON('/my-reviews', function(reviews, err) {
+          var existing = $('.review').map(function() {
+            return $(this).data('id');
+          }).get();
+          $.each(reviews, function(i) {
+             if (existing.indexOf(reviews[i]._id) === -1) {
+               $('.table tbody').prepend(buildReview(reviews[i]));
+             }
+          });
+        });
+      }
+
+      $('.form').submit(function(event) {
+        event.preventDefault();
+        if ($('input[name="rating"]').val() == "" || $('input[name="course-name"]').val()) {
+
+            return false;
+        }
+        $.ajax({
+          url: '/submit-review',
+          type: 'POST',
+          data: $('.form').serialize(),
+          success: function(data, textStatus, jqXHR) {
+            loadReviews();
+            $('.ui.form').form('reset');
+          },
+          error: function(jqXHR, textStatus, err) {
+            console.log(err);
+          }
+        });
+      });
+
+
+      var content = []
+      $.getJSON('/json/courses.json', function(classes, err) {
+        $.each(classes, function(i) {
+          var temp = classes[i].split('-')[0] + ' ' + classes[i].split('-')[1];
+          content.push({ title: classes[i], extra: temp });
+        });
+        $('.ui.search').search({
+          source: content,
+          searchFields : [ 'title', 'extra' ]
+        });
+      });
+
+      $('.ui.dropdown').dropdown();
+      loadReviews();
+    </script>
 
 </body>
 </html>
