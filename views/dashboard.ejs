@@ -18,11 +18,15 @@
 
     <main>
       <div class="ui two column stackable grid container">
-        <div class="column">
-          <h2>Submit A Class Rating</h2>
-          <form class="ui form">
+        <div class="eight wide column">
+          <h2>Rate Your Courses</h2>
+            <p>Please rate your enjoyment of the course with a 5 being the most and 1 being the least.</p>
+            <form class="ui form">
+              <div class="ui error message">
+                <div>There was a problem with your submission</div>
+              </div>
               <div class="fields">
-                <div class="ui six wide search field">
+                <div class="ui eight wide search field">
                   <input class="prompt" type="text" name="course-name" placeholder="Courses...">
                   <div class="results"></div>
                 </div>
@@ -45,7 +49,7 @@
           </form>
         </div>
         <div class="column">
-          <h2>Submitted Rankings</h2>
+          <h2>Submitted Ratings</h2>
           <table class="ui red table">
             <tbody></tbody>
             </table>
@@ -60,8 +64,8 @@
     <script>
       var buildReview = function(review) {
         var html = '<tr class="review" data-id="' + review._id + '">' +
-                     '<td>' + review.courseName + '</td><td>' + review.rating + '</td>' +
-                     '</tr>';
+                   '<td>' + review.courseName + '</td><td>' + review.rating + '</td>' +
+                   '</tr>';
         return html;
       }
 
@@ -79,6 +83,7 @@
         if ($('input[name="rating"]').val() == "" || $('input[name="course-name"]').val() == "") {
           return false;
         }
+        $('.ui.form').removeClass('error');
         $.ajax({
           url: '/submit-review',
           type: 'POST',
@@ -86,8 +91,12 @@
           success: function(data, textStatus, jqXHR) {
             loadReviews();
             $('.ui.form').trigger('reset');
+            // 'reset' doesn't reset dropdown, so here's the jquery
+            $('.ui.form .dropdown input').removeAttr('value');
+            $('.ui.form .dropdown div.text').addClass('default').text('Rating');
           },
           error: function(jqXHR, textStatus, err) {
+            $('.ui.form').addClass('error');
             console.log(err);
           }
         });
@@ -95,7 +104,7 @@
 
 
       var content = []
-      $.getJSON('/json/courses.json', function(classes, err) {
+      $.getJSON('/course-list', function(classes, err) {
         $.each(classes, function(i) {
           var temp = classes[i].split('-')[0] + ' ' + classes[i].split('-')[1];
           content.push({ title: classes[i], extra: temp });

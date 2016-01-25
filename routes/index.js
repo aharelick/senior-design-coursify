@@ -76,6 +76,10 @@ router.get('/logout', passwordless.logout(), function(req, res) {
   res.redirect('/login');
 });
 
+router.get('/course-list', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
+  res.json(Array.from(CourseList.courses));
+});
+
 router.get('/my-reviews', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
   Review.find({ user: req.user }, function(err, reviews) {
     if (err) {
