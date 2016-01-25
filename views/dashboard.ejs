@@ -67,22 +67,17 @@
 
       var loadReviews = function() {
         $.getJSON('/my-reviews', function(reviews, err) {
-          var existing = $('.review').map(function() {
-            return $(this).data('id');
-          }).get();
+          $('.table tbody').empty();
           $.each(reviews, function(i) {
-             if (existing.indexOf(reviews[i]._id) === -1) {
-               $('.table tbody').prepend(buildReview(reviews[i]));
-             }
+            $('.table tbody').prepend(buildReview(reviews[i]));
           });
         });
       }
 
       $('.form').submit(function(event) {
         event.preventDefault();
-        if ($('input[name="rating"]').val() == "" || $('input[name="course-name"]').val()) {
-
-            return false;
+        if ($('input[name="rating"]').val() == "" || $('input[name="course-name"]').val() == "") {
+          return false;
         }
         $.ajax({
           url: '/submit-review',
@@ -90,7 +85,7 @@
           data: $('.form').serialize(),
           success: function(data, textStatus, jqXHR) {
             loadReviews();
-            $('.ui.form').form('reset');
+            $('.ui.form').trigger('reset');
           },
           error: function(jqXHR, textStatus, err) {
             console.log(err);

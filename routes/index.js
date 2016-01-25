@@ -4,6 +4,7 @@ var validator = require('validator');
 var passwordless = require('passwordless');
 var User = require('../models/User');
 var Review = require('../models/Review');
+var CourseList = require('../models/course_list');
 
 
 /* GET index page. */
@@ -90,6 +91,13 @@ router.post('/submit-review', passwordless.restricted({ failureRedirect: '/login
 
   var courseName = req.body['course-name'];
   var rating = req.body.rating;
+
+  if (!validator.isInt(rating, { min: 1, max: 5 })) {
+    return res.sendStatus(400);
+  }
+  if (!CourseList.courses.has(courseName)) {
+    return res.sendStatus(400);
+  }
 
   Review.findOne({ user: req.user, courseName: courseName }, function(err, review) {
     if (err) return res.sendStatus(500);
