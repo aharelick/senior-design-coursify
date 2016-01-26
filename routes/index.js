@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 /* GET login page. */
 router.get('/login', function(req, res, next) {
   if (req.user) {
-    res.redirect('/dashboard');
+    return res.redirect('/dashboard');
   }
   res.render('login', { title: 'Coursify'});
 });
