@@ -35,6 +35,8 @@ var dbURI = process.env.MONGOLAB_URI || config.db;
 var emailUsername = process.env.EMAIL_USERNAME || config.emailUsername;
 var emailPassword = process.env.EMAIL_PASSWORD || config.emailPassword;
 var emailHost = process.env.EMAIL_HOST || config.emailHost;
+var hostName = process.env.HOST_NAME || config.hostName;
+
 
 mongoose.connect(dbURI);
 mongoose.connection.on('error', function() {
@@ -68,7 +70,7 @@ var smtpServer  = email.server.connect({
   host: emailHost,
   ssl: true
 });
-require('./config/passwordless')(passwordless, smtpServer, emailUsername);
+require('./config/passwordless')(passwordless, smtpServer, emailUsername, hostName);
 app.use(passwordless.sessionSupport());
 app.use(passwordless.acceptToken({ successRedirect: '/dashboard' }));
 

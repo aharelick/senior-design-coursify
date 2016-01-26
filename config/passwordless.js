@@ -1,12 +1,12 @@
 var User = require('../models/User');
 var os = require('os');
 
-module.exports = function(passwordless, smtpServer, emailUsername) {
+module.exports = function(passwordless, smtpServer, emailUsername, hostName) {
   passwordless.addDelivery(
     function(tokenToSend, uidToSend, recipient, callback) {
       smtpServer.send({
-        text: 'Hello!\nAccess your account here: http://'
-        + os.hostname() + ':' + (process.env.PORT || '3000') + '?token=' + tokenToSend + '&uid='
+        text: 'Hello!\nAccess your account here: https://'
+        + hostName + '?token=' + tokenToSend + '&uid='
         + encodeURIComponent(uidToSend),
         from: 'Coursify <' + emailUsername + '>',
         to: recipient,
