@@ -5,7 +5,7 @@ module.exports = function(passwordless, smtpServer, emailUsername, hostName) {
   passwordless.addDelivery(
     function(tokenToSend, uidToSend, recipient, callback) {
       smtpServer.send({
-        text: 'Hello!\nAccess your account here: https://'
+        text: 'Hello!\nAccess your account here: http://'
         + hostName + '?token=' + tokenToSend + '&uid='
         + encodeURIComponent(uidToSend),
         from: 'Coursify <' + emailUsername + '>',
