@@ -39,7 +39,6 @@ router.post('/send-token',
     next();
   },
   passwordless.requestToken(
-    // Turn the email address into an user's ID
     function(email, delivery, callback, req) {
       User.findOne({ email: email.toLowerCase() }, function (err, user) {
         if (user) {
@@ -90,9 +89,6 @@ router.get('/my-reviews', passwordless.restricted({ failureRedirect: '/login'}),
 });
 
 router.post('/submit-review', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
-  // TODO validate course name
-  // TODO validate rating
-
   var courseName = req.body['course-name'];
   var rating = req.body.rating;
 

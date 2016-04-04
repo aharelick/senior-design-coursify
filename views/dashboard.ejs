@@ -1,14 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% include ./partials/head %>
-    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
-    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
-  <style>
-      main > .ui.container {
-          margin-top: 3em;
-      }
-  </style>
+    <% include ./partials/head %>
 </head>
 <body>
 
@@ -78,7 +71,7 @@
         });
       }
 
-      $('.form').submit(function(event) {
+      $('.ui.form').submit(function(event) {
         event.preventDefault();
         if ($('input[name="rating"]').val() == "" || $('input[name="course-name"]').val() == "") {
           return false;
@@ -87,7 +80,7 @@
         $.ajax({
           url: '/submit-review',
           type: 'POST',
-          data: $('.form').serialize(),
+          data: $('.ui.form').serialize(),
           success: function(data, textStatus, jqXHR) {
             loadReviews();
             $('.ui.form').trigger('reset');
