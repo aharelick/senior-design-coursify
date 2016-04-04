@@ -1,27 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% include ./partials/head %>
+    <% include ./partials/head %>
 </head>
-<body class="container">
+<body>
 
     <header>
       <% include ./partials/header %>
     </header>
 
     <main>
-      <div class="ui main text container">
-        <h1 class="ui header">Upload Your Data</h1>
-        <form>
-          <input class="ui input" type="file" name="dataFile"></input><br><br>
-          <button class="ui button" action="submit">Submit Data File</input>
-        </form>
+      <div class="ui two column stackable grid container">
+        <div class="eight wide column">
+          <h2>Rate Your Courses</h2>
+            <p>Please rate your enjoyment of the course with a 5 being the most and 1 being the least.</p>
+            <form class="ui form">
+              <div class="ui error message">
+                <div>There was a problem with your submission</div>
+              </div>
+              <div class="fields">
+                <div class="ui eight wide search field">
+                  <input class="prompt" type="text" name="course-name" placeholder="Courses...">
+                  <div class="results"></div>
+                </div>
+                <div class="six wide field">
+                  <div class="ui selection dropdown">
+                    <input type="hidden" name="rating">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Rating</div>
+                    <div class="menu">
+                      <div class="item" data-value="1">1</div>
+                      <div class="item" data-value="2">2</div>
+                      <div class="item" data-value="3">3</div>
+                      <div class="item" data-value="4">4</div>
+                      <div class="item" data-value="5">5</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <button class="ui submit button">Submit</button>
+          </form>
+        </div>
+        <div class="column">
+          <h2>Submitted Ratings</h2>
+          <table class="ui red table">
+            <tbody></tbody>
+            </table>
+        </div>
       </div>
     </main>
 
     <footer>
       <% include ./partials/footer %>
     </footer>
+
+    <script>
+      var buildReview = function(review) {
+        var html = '<tr class="review" data-id="' + review._id + '">' +
+                   '<td>' + review.courseName + '</td><td>' + review.rating + '</td>' +
+                   '</tr>';
+        return html;
+      }
+
+      var loadReviews = function() {
+        $.getJSON('/my-reviews', function(reviews, err) {
+          $('.table tbody').empty();
+          $.each(reviews, function(i) {
+            $('.table tbody').prepend(buildReview(reviews[i]));
+          });
+        });
+      }
+
+      $('.ui.form').submit(function(event) {
+        event.preventDefault();
+        if ($('input[name="rating"]').val() == "" || $('input[name="course-name"]').val() == "") {
+          return false;
+        }
+        $('.ui.form').removeClass('error');
+        $.ajax({
+          url: '/submit-review',
+          type: 'POST',
+          data: $('.ui.form').serialize(),
+          success: function(data, textStatus, jqXHR) {
+            loadReviews();
+            $('.ui.form').trigger('reset');
+            // 'reset' doesn't reset dropdown, so here's the jquery
+            $('.ui.form .dropdown input').removeAttr('value');
+            $('.ui.form .dropdown div.text').addClass('default').text('Rating');
+          },
+          error: function(jqXHR, textStatus, err) {
+            $('.ui.form').addClass('error');
+            console.log(err);
+          }
+        });
+      });
+
+
+      var content = []
+      $.getJSON('/course-list', function(classes, err) {
+        $.each(classes, function(i) {
+          var temp = classes[i].split('-')[0] + ' ' + classes[i].split('-')[1];
+          content.push({ title: classes[i], extra: temp });
+        });
+        $('.ui.search').search({
+          source: content,
+          searchFields : [ 'title', 'extra' ]
+        });
+      });
+
+      $('.ui.dropdown').dropdown();
+      loadReviews();
+    </script>
 
 </body>
 </html>

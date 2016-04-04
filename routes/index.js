@@ -3,6 +3,8 @@ var router = express.Router();
 var validator = require('validator');
 var passwordless = require('passwordless');
 var User = require('../models/User');
+var Review = require('../models/Review');
+var CourseList = require('../models/course_list');
 
 
 /* GET index page. */
@@ -17,7 +19,7 @@ router.get('/', function(req, res, next) {
 /* GET login page. */
 router.get('/login', function(req, res, next) {
   if (req.user) {
-    res.redirect('/dashboard');
+    return res.redirect('/dashboard');
   }
   res.render('login', { title: 'Coursify'});
 });
@@ -37,7 +39,6 @@ router.post('/send-token',
     next();
   },
   passwordless.requestToken(
-    // Turn the email address into an user's ID
     function(email, delivery, callback, req) {
       User.findOne({ email: email.toLowerCase() }, function (err, user) {
         if (user) {
@@ -72,6 +73,51 @@ router.get('/dashboard', passwordless.restricted({ failureRedirect: '/login'}), 
 
 router.get('/logout', passwordless.logout(), function(req, res) {
   res.redirect('/login');
+});
+
+router.get('/course-list', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
+  res.json(Array.from(CourseList.courses));
+});
+
+router.get('/my-reviews', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
+  Review.find({ user: req.user }, function(err, reviews) {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    res.json(reviews);
+  });
+});
+
+router.post('/submit-review', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
+  var courseName = req.body['course-name'];
+  var rating = req.body.rating;
+
+  if (!validator.isInt(rating, { min: 1, max: 5 })) {
+    return res.sendStatus(400);
+  }
+  if (!CourseList.courses.has(courseName)) {
+    return res.sendStatus(400);
+  }
+
+  Review.findOne({ user: req.user, courseName: courseName }, function(err, review) {
+    if (err) return res.sendStatus(500);
+    if (review) {
+      review.rating = rating;
+      review.save(function (err) {
+        if (err) return res.sendStatus(500);
+      });
+    } else {
+      var newReview = Review({
+        user: req.user,
+        courseName: courseName,
+        rating: rating
+      });
+      newReview.save(function (err) {
+        if (err) return res.sendStatus(500);
+      });
+    }
+    return res.sendStatus(200);
+  });
 });
 
 module.exports = router;
