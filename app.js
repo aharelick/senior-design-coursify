@@ -10,7 +10,6 @@ var MongoStoreSession = require('connect-mongo')(session);
 var MongoStoreToken = require('passwordless-mongostore');
 var flash = require('connect-flash');
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var expressValidator = require('express-validator');
 var passwordless = require('passwordless');
 var email = require('emailjs');
@@ -86,7 +85,6 @@ app.use(function(req, res, next) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

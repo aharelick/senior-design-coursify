@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./partials/head %>
+</head>
+<body>
+
+<header>
+    <% include ./partials/header %>
+</header>
+
+<main>
+    <div class="ui one column centered grid container">
+        <form class="ui form" action="/data-dump" method="POST">
+            <div class="ui input">
+                <input type="text" name="password" placeholder="Password...">
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <% include ./partials/footer %>
+</footer>
+
+</body>
+</html>

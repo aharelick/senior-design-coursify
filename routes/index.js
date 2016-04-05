@@ -67,7 +67,7 @@ router.post('/send-token',
 );
 
 /* GET dashboard. */
-router.get('/dashboard', passwordless.restricted({ failureRedirect: '/login'}), function(req, res, next) {
+router.get('/dashboard', passwordless.restricted({ failureRedirect: '/login' }), function(req, res, next) {
   res.render('dashboard', { title: 'Coursify'});
 });
 
@@ -75,11 +75,11 @@ router.get('/logout', passwordless.logout(), function(req, res) {
   res.redirect('/login');
 });
 
-router.get('/course-list', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
+router.get('/course-list', passwordless.restricted({ failureRedirect: '/login' }), function(req, res) {
   res.json(Array.from(CourseList.courses));
 });
 
-router.get('/my-reviews', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
+router.get('/my-reviews', passwordless.restricted({ failureRedirect: '/login' }), function(req, res) {
   Review.find({ user: req.user }, function(err, reviews) {
     if (err) {
       return res.sendStatus(500);
@@ -88,7 +88,7 @@ router.get('/my-reviews', passwordless.restricted({ failureRedirect: '/login'}),
   });
 });
 
-router.post('/submit-review', passwordless.restricted({ failureRedirect: '/login'}), function(req, res) {
+router.post('/submit-review', passwordless.restricted({ failureRedirect: '/login' }), function(req, res) {
   var courseName = req.body['course-name'];
   var rating = req.body.rating;
 
@@ -117,6 +117,25 @@ router.post('/submit-review', passwordless.restricted({ failureRedirect: '/login
       });
     }
     return res.sendStatus(200);
+  });
+});
+
+router.get('/data-dump', passwordless.restricted({ failureRedirect: '/login' }), function(req, res) {
+  res.render('data_dump', { title: 'Coursify' });
+});
+
+router.post('/data-dump', passwordless.restricted({ failureRedirect: '/login' }), function(req, res, next) {
+  var password  = req.body.password;
+  if (process.env.DATA_DUMP_PASSWORD === undefined) {
+    return next(Error('DATA_DUMP_PASSWORD: env variable not set'));
+  }
+  if (password !== process.env.DATA_DUMP_PASSWORD) {
+    return res.redirect('/data-dump');
+  }
+  Review.find({}, function(err, reviews) {
+    if (err) return res.sendStatus(500);
+    res.attachment('reviews.json');
+    return res.json(reviews);
   });
 });
 
