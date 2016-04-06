@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./partials/head %>
+</head>
+<body>
+
+<header>
+    <% include ./partials/header %>
+</header>
+
+<main>
+    <div class="ui two column stackable grid container">
+        <div class="column">
+            <h2>Your Recommendations</h2>
+            <table class="ui red table">
+                <tbody>
+                    <% for (var i = 0; i < recommendations.length; i++) { %>
+                        <tr class="recommendation">
+                            <td>
+                                <div class="ui basic white label">
+                                    <%= recommendations[i] %>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ui labeled button">
+                                    <div class="ui red icon button">
+                                        PCR
+                                    </div>
+                                    <a class="ui basic red label" href="https://penncoursereview.com/course/<%= recommendations[i] %>" target="_blank">
+                                        https://penncoursereview.com/course/<%= recommendations[i] %>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <% include ./partials/footer %>
+</footer>
+
+</body>
+</html>
