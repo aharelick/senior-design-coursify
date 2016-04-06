@@ -141,6 +141,7 @@ router.post('/data-dump', passwordless.restricted({ failureRedirect: '/login' })
 
 /* GET recommendations. */
 router.get('/recommendations', passwordless.restricted({ failureRedirect: '/login' }), function(req, res, next) {
+  // TODO: this is fake data, let's get some real data
   var recommendations = ['CIS-121','FNAR-362', 'BIOL-482', 'AFRC-116'];
   res.render('recommendations', { title: 'Coursify', recommendations: recommendations });
 });

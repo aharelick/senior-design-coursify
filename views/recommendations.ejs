@@ -37,12 +37,38 @@
                 </tbody>
             </table>
         </div>
+        <div class="column">
+            <h2>Submitted Ratings</h2>
+            <table class="ui red table review-table">
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </main>
 
 <footer>
     <% include ./partials/footer %>
 </footer>
+
+<script>
+    var buildReview = function(review) {
+        var html = '<tr class="review" data-id="' + review._id + '">' +
+									 '<td>' + review.courseName + '</td><td>' + review.rating + '</td>' +
+                	 '</tr>';
+        return html;
+    }
+
+    var loadReviews = function() {
+        $.getJSON('/my-reviews', function(reviews, err) {
+            $('.review-table tbody').empty();
+            $.each(reviews, function(i) {
+                $('.review-table tbody').prepend(buildReview(reviews[i]));
+            });
+        });
+    }
+
+    loadReviews();
+</script>
 
 </body>
 </html>
