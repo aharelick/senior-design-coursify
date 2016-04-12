@@ -16,6 +16,31 @@
     "clean": "dist/"
   },
   "permission": false,
-  "rtl": false,
-  "version": "2.1.6"
+  "rtl": "No",
+  "components": [
+    "reset",
+    "site",
+    "button",
+    "container",
+    "divider",
+    "flag",
+    "header",
+    "icon",
+    "image",
+    "input",
+    "label",
+    "list",
+    "form",
+    "grid",
+    "menu",
+    "message",
+    "table",
+    "item",
+    "checkbox",
+    "dropdown",
+    "search",
+    "form",
+    "segment"
+  ],
+  "version": "2.1.8"
 }
