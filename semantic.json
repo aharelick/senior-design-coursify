@@ -40,7 +40,8 @@
     "dropdown",
     "search",
     "form",
-    "segment"
+    "segment",
+    "transition"
   ],
   "version": "2.1.8"
 }
