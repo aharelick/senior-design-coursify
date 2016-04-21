@@ -4,6 +4,7 @@ var validator = require('validator');
 var passwordless = require('passwordless');
 var User = require('../models/User');
 var Review = require('../models/Review');
+var Recommendation = require('../models/Recommendation');
 var CourseList = require('../models/course_list');
 
 
@@ -141,9 +142,10 @@ router.post('/data-dump', passwordless.restricted({ failureRedirect: '/login' })
 
 /* GET recommendations. */
 router.get('/recommendations', passwordless.restricted({ failureRedirect: '/login' }), function(req, res, next) {
-  // TODO: this is fake data, let's get some real data
-  var recommendations = ['CIS-121','FNAR-362', 'BIOL-482', 'AFRC-116'];
-  res.render('recommendations', { title: 'Coursify', recommendations: recommendations });
+  Recommendation.find({ user: req.user }, function(err, recommendations) {
+    if (err) return next(err);
+    return res.render('recommendations', { title: 'Coursify', recommendations: recommendations });
+  });
 });
 
 module.exports = router;
