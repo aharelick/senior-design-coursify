@@ -19,16 +19,16 @@
                         <tr class="recommendation">
                             <td>
                                 <div class="ui basic white label">
-                                    <%= recommendations[i] %>
+                                    <%= recommendations[i].class %>
                                 </div>
                             </td>
                             <td>
                                 <div class="ui labeled button">
-                                    <a class="ui red icon button" href="https://penncoursereview.com/course/<%= recommendations[i] %>" target="_blank">
+                                    <a class="ui red icon button" href="https://penncoursereview.com/course/<%= recommendations[i].class %>" target="_blank">
                                         PCR
                                     </a>
-                                    <a class="ui basic red label" href="https://penncoursereview.com/course/<%= recommendations[i] %>" target="_blank">
-                                        https://penncoursereview.com/course/<%= recommendations[i] %>
+                                    <a class="ui basic red label" href="https://penncoursereview.com/course/<%= recommendations[i].class %>" target="_blank">
+                                        https://penncoursereview.com/course/<%= recommendations[i].class %>
                                     </a>
                                 </div>
                             </td>
